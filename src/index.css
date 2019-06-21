@@ -3,3 +3,65 @@ button,
 	margin-bottom: 0 !important;
 	margin-right: .5rem;
 }
+
+.dropdownsize {
+	width: 30%;
+}
+
+.fontsize{
+	font-family: arial,sans-serif;
+	font-size : small
+}
+
+.divforecastlist{
+	margin-bottom:-1px;
+	padding:0;
+	padding-bottom:1px;
+	cursor:pointer;
+	width : 100%
+}
+
+.divsingleboxeather {
+	display:inline-block;
+	line-height:1;
+	text-align:center;
+	font-weight:13px;
+	height:90px;
+	width:73px
+}
+
+.imgicon {
+	margin:1px 4px 0;height:48px;width:48px
+}
+
+.divimg {
+	display:inline-block
+}
+
+.divmainfandcreading {
+	font-weight:normal;line-height:15px;font-size:13px
+}
+
+.divm2firstdigit{
+	display:inline-block;padding-right:5px
+}
+
+.divinline {
+	display:inline
+}
+
+.displaynone {
+	display:none
+}
+
+.divinlineblock {
+	display:inline-block
+}
+
+.divmain {
+	margin-left:1em
+}
+
+.divforecastsublist {
+	width : 100%
+}

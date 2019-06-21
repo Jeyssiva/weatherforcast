@@ -1,57 +1,56 @@
 import React, { useState, useEffect,  Fragment } from 'react'
-import AddUserForm from './forms/AddUserForm'
-import EditUserForm from './forms/EditUserForm'
-import UserTable from './tables/UserTable'
-import $  from 'jquery';
-import { get } from 'http';
-
-const FetchRequest = (url) => {
-    const [data, updateData] = useState(undefined);
-    useEffect(() => {
-        // fetch(url).then(res => {
-        //    return res.json();
-        //  }).then(json => {
-        //    updateData(json);
-		// });
-
-		// $.ajaxSetup({
-		// 	headers: {
-		// 		'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		// 	}
-		// });
-		
-		$.ajax({
-            url:"http://api.openweathermap.org/data/2.5/forecast?q=Chennai,IN&mode=json&appid=cf3f9956c7e13de9cb12fb4b0b5f5205",
-            type: "POST",
-			dataType: "json",
-			async: true,
-			// data : {
-			// 	q : 'Chennai,IN',
-			// 	appid: 'cf3f9956c7e13de9cb12fb4b0b5f5205'
-			// },
-			headers : {
-				'Access-Control-Allow-Credentials' : 'true',
-				'Access-Control-Allow-Methods' : 'GET,POST',
-				'Access-Control-Allow-Origin' : '*',
-				'Content-Type' : 'application/json; charset=utf-8'
-			},
-            success: function(data) {            
-                return data
-            },
-            error: function(error) {
-                console.log(error)
-            }
-		});
-		
-     }, []);
-   
-    return data;
-}
+import DropDownList from './dropdownlist'
+import ForeCastList from './forecastlist'
 
 const App = () => {
 
-	const url = 'http://api.openweathermap.org/data/2.5/forecast?q=Chennai,IN&mode=json&appid=cf3f9956c7e13de9cb12fb4b0b5f5205'
-	const result = FetchRequest(url)
+	useEffect (() => {
+		const result = getWeather("Chennai")
+	}, [])
+
+	const getWeather = async (cityname) => {
+	const api_call = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${cityname},IN&appid=cf3f9956c7e13de9cb12fb4b0b5f5205`);	
+	const response = await api_call.json();
+
+	setTimeout(() =>{
+			setWeatherData(response.list)
+			filterweathers(response.list)
+	},0)
+	}
+	
+	const filterweathers = (responsedata) =>{
+	var filter_data = []
+	var today  = new Date()
+	var fulldays = new Array( "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" );
+
+	var t_hours = today.getHours()
+	//var dateTime = date+' '+time;
+
+	responsedata && responsedata.map((item) => {
+		//var f_date = item.dt_txt
+		var c_w_date = new Date(item.dt_txt)
+		// var c_date = c_w_date.getFullYear()+'-'+(c_w_date.getMonth() + 1)+'-'+ c_w_date.getDate();
+		// var c_time = c_w_date.getHours() + ":" + c_w_date.getMinutes() + ":" + c_w_date.getSeconds();
+
+		var c_getDate = c_w_date.getDate()
+		var c_hours = c_w_date.getHours()
+		var c_day = c_w_date.getDay() != 0 ? c_w_date.getDay() - 1  : 6
+		if(Math.abs(t_hours - c_hours) < 3)
+		{
+			var isdateexists = filter_data && filter_data.findIndex(x => x[0] == c_getDate)
+			if(isdateexists == -1){		
+				let converttofahrenheit = parseFloat(item.main.temp) * 9/5 - 459.67
+				let iconpath = "http://openweathermap.org/img/w/" + item.weather[0].icon + ".png"
+				
+				filter_data.push([c_getDate,fulldays[c_day],converttofahrenheit,
+				item.weather[0].icon,iconpath,item.weather[0].id,item.main.pressure,item.main.humidity])
+			}
+		}			
+	})
+
+	setfilterWeatherData(filter_data)
+	console.log(filter_data)
+	}
 
 	// Data
 	// const usersData = [
@@ -91,36 +90,41 @@ const App = () => {
 	// 	setCurrentUser({ id: user.id, name: user.name, username: user.username })
 	// }
 
+	const cities = [
+		// { id : 0, name: 'Select City'},
+		{ id: 1, name: 'Chennai' },
+		{ id: 2, name: 'Kolkata' },
+        { id: 3, name: 'Kochi'},
+        { id: 4, name: 'Bangalore'},
+        { id: 5, name: 'Hyderabad'}
+	
+	]
+	const initialFormState = { id: 1, name: 'Chennai'}
+
+	// Setting state
+	const [ city, setCities ] = useState(cities)
+	const [ currentcity, setCurrentCity ] = useState(initialFormState)
+	const [ weatherdata, setWeatherData] = useState(undefined);
+	const [ filterweatherdata, setfilterWeatherData] = useState(undefined);
+	const [ forecastperday,setForeCastPerDay] = useState(undefined)
+	
+	const updateCity = city => {
+		setCurrentCity({id : city.id,name : city.name})
+		
+		const result = getWeather(city.name)
+	}
+
+	const showforecastperday = forecastperday => {
+		setForeCastPerDay({id:forecastperday.id})
+	}
+
 	return (
-		// <div className="container">
-		// 	<h1>CRUD App</h1>
-		// 	<div className="flex-row">
-		// 		<div className="flex-large">
-		// 			{editing ? (
-		// 				<Fragment>
-		// 					<h2>Edit user</h2>
-		// 					<EditUserForm
-		// 						editing={editing}
-		// 						setEditing={setEditing}
-		// 						currentUser={currentUser}
-		// 						updateUser={updateUser}
-		// 					/>
-		// 				</Fragment>
-		// 			) : (
-		// 				<Fragment>
-		// 					<h2>Add user</h2>
-		// 					<AddUserForm addUser={addUser} />
-		// 				</Fragment>
-		// 			)}
-		// 		</div>
-		// 		<div className="flex-large">
-		// 			<h2>View users</h2>
-		// 			<UserTable users={users} editRow={editRow} deleteUser={deleteUser} />
-		// 		</div>
-		// 	</div>
-		// </div>
-		<div>
-        	<h1>CRUD App</h1>
+		<div id={"main"} className = {"divmain"}>
+        	<h1>Weather Forecast</h1>
+			<DropDownList cities = {cities} updateCity = {updateCity}/>
+			<br></br>
+			<ForeCastList filterweatherdata = {filterweatherdata} 
+			showforecastperday = {showforecastperday} />
     	</div>
 	)
 }
