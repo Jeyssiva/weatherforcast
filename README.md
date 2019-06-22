@@ -1,8 +1,11 @@
-# React CRUD App with Hooks
+# Weather Forecast
 
-Running React 16.7.0-alpha
+Running React 16.8.6
 
-- View all users
-- Add a new user
-- Delete a user
-- Edit an existing user
+Instructions:
+
+ 1. Open the cmd prompt with corresponding folder.
+ 2. npm install
+ 3. npm start
+ 
+ 
