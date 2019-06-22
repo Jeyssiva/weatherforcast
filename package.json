@@ -1,12 +1,12 @@
 {
-  "name": "hooks",
+  "name": "weatherforecast",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "classnames": "^2.2.6",
     "gh-pages": "^2.0.1",
     "jquery": "^3.4.1",
-    "react": "16.8.6",
+    "react": "",
     "react-dom": "16.8.6",
     "react-scripts": "2.0.5"
   },
@@ -26,6 +26,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "homepage": "http://taniarascia.github.io/react-hooks"
+  ]
 }
