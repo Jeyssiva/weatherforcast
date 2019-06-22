@@ -19,20 +19,34 @@ const DropDownList = (props) => {
         return (<option key={item.id +'_key'} value={item.id}>{item.name}</option>)
     }))
 
+    const weatherlist = (props.weathertypes && props.weathertypes.map((item) => {
+        return (<option key={item.id +'_key'} value={item.id}>{item.weathertype}</option>)
+    }))
+
+    const onWeatherChanged = event => {
+        const {value , selectedIndex}  = event.target     
+        props.weatherChanged(value)
+	}
+
     return (
-        // <form onSubmit={event => {
-        //     event.preventDefault()
-            
-        //     props.updateCity(currentcity)
-        //     setCurrentCity(initialFormState)
-        // }}
-        // >
         <div>
-            <select id = {"drpdowncity"} 
-                    className = {"dropdownsize"}
-                    onChange = {onDropDownChanged}>
-                {valueList}
-            </select>
+           <span className={"searchheader"}> City: </span> <div>
+                <select id = {"drpdowncity"} 
+                        className = {"dropdownsize"}
+                        onChange = {onDropDownChanged}>
+                    {valueList}
+                </select>
+            </div>
+
+            <span className={"searchheader"}>Weather Type: </span> <div>
+                <select id = {"drpdownweatype"} 
+                        className = {"dropdownsize"}
+                        onChange = {onWeatherChanged}
+                        value={props.currentweatherid}>
+                        <option key = {"keyselectall"} id={"0"} value = {"0"}>{"All"}</option>
+                        {weatherlist}
+                </select>
+            </div>
         </div>
     )
 }

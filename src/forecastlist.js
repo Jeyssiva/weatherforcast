@@ -4,17 +4,15 @@ import ForeCast from './forecast'
 const ForeCastList = (props) => {
 
     let forecastdetails = props.filterweatherdata && props.filterweatherdata.map((item) => {
-
-        return (<ForeCast key = {"key_" + item[0]} 
-                uniquecode = {item[0]}
-                dayofgivendate={item[1]} 
-                iconpath = {item[4]}
-                tempvalue = {item[2]}
-                showforecastperday = {props.showforecastperday}></ForeCast>)
+        return (<ForeCast key = {"key_" + item.id} 
+                uniquecode = {item.id}
+                dayofgivendate={item.halfdays} 
+                iconpath = {item.iconpath}
+                fahrenvalue = {item.fahrenvalue}
+                showforecastperday = {props.showforecastperday}
+                celsiusvalue = {item.celsiusvalue}
+                isshowfahren = {item.isshowfahren}></ForeCast>)
     })
-
-    console.log(props.filterweatherdata)
-
     return (
         <div id ={"forecastlist"} className = {"divforecastlist"}>
             <div className = {"divforecastsublist"}>
