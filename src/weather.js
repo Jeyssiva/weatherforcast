@@ -2,6 +2,7 @@ import React, { useState, useEffect,  Fragment } from 'react'
 import DropDownList from './dropdownlist'
 import ForeCastList from './forecastlist'
 import ForeCastPerDay from './forecastperday'
+import LineGraph from './linechart'
 
 const Weather = () => {
 	// Initialize the Cities
@@ -16,7 +17,6 @@ const Weather = () => {
 	const initialFormState = { id: 1, name: 'Chennai',state:'Tamil Nadu'}
 
 	// Setting state
-	const [ city, setCities ] = useState(cities)
 	const [ currentcity, setCurrentCity ] = useState(initialFormState)
 	const [ weatherdata, setWeatherData] = useState(undefined);
 	const [ filterweatherdata, setfilterWeatherData] = useState(undefined);
@@ -26,6 +26,8 @@ const Weather = () => {
 	const [ weathertypes , setWeatherTypes] = useState(undefined)
 	const [ originalweatherdata, setoriginalWeatherData] = useState(undefined);
 	const [ currentweatherid, setWeatherId] = useState(0);
+	const [ chartdetails,setchartdetails] = useState(undefined)
+	const [ filterchartdetails,setfilterchartdetails] = useState(undefined)
 
 	useEffect (() => {
 		// show the Weather details at load time
@@ -50,6 +52,7 @@ const Weather = () => {
 	const filterweathers = (responsedata,isdefault = false, cityid = 0) =>{
 		var weather_types = []
 		var filter_data_pair = []
+		var chart_details = []
 		var today  = new Date()
 		var halfdays = new Array( "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" );
 		let fulldays = new Array( "Monday", "Tuesday", "Wednesday", "Thusday", "Friday", "Saturday", "Sunday" ); 
@@ -88,20 +91,28 @@ const Weather = () => {
 						weather_types.push(weather_type)
 					}
 				}
-			}			
+			}
+
+			var ampmc = c_hours < 12 ? "AM" : "PM"
+			var hourc = c_hours 
+		    let convfvalue = Math.floor(parseFloat(item.main.temp) * 9/5 - 459.67)
+			let convcvalue = Math.floor(parseFloat(item.main.temp) - 273.15)
+			let chartdetails = {id:c_getDate,x_axis:hourc,y_axis_f:parseInt(convfvalue),y_axis_c:parseInt(convcvalue)}
+			chart_details.push(chartdetails)
 	})
 
 	setfilterWeatherData(filter_data_pair)
 	setoriginalWeatherData(filter_data_pair)
-
 	setWeatherTypes(weather_types)
+	setchartdetails(chart_details)
 
-		//It will be work in load time and city change event
-		if (isdefault == true){
-			setTimeout(() =>{
-				showforecastperday(filter_data_pair[0].id , filter_data_pair, cityid , isdefault)
-			},0)
-		}
+	//It will be work in load time and city change event
+	if (isdefault == true){
+		setTimeout(() =>{	
+			showforecastperday(filter_data_pair[0].id , filter_data_pair, cityid , isdefault)
+			getweatherdetailsforchart(filter_data_pair[0].id,chart_details)
+		},0)
+	}
 	}
 
 	// Change the weather details based on city name
@@ -109,7 +120,14 @@ const Weather = () => {
 		setCurrentCity({id : city.id,name : city.name})
 		setWeatherId(0)
 		
-		const result = getWeather(city.name , true, city.id)
+		getWeather(city.name , true, city.id)
+	}
+
+	const getweatherdetailsforchart = (forecastid, chart_details) => {
+		let filter_chart_details = chart_details && chart_details.filter(c => c.id == forecastid)
+		if(filter_chart_details){
+				setfilterchartdetails(filter_chart_details)
+		}
 	}
 
 	// Get the specific weather information based on weather selection.
@@ -140,6 +158,8 @@ const Weather = () => {
 		} else {
 			forecastdetail = filterweatherdata.filter(x => x.id == forecastid)[0]
 		}
+
+		getweatherdetailsforchart(forecastid,chartdetails)
 	
 		setForeCastDetail({id:forecastid.id,cityname:cityname,
 							statename:statename,fullday:forecastdetail.fullday,
@@ -179,7 +199,7 @@ const Weather = () => {
 
 		setForeCastDetail(t_forecastdetail)
 
-		console.log(weatherdataforupdate)
+		getweatherdetailsforchart(forecastid.id,chartdetails)
 	}
 
 	// Filter the weather details based on weather change.
@@ -217,6 +237,9 @@ const Weather = () => {
 				weathertypes = {weathertypes} weatherChanged ={weatherChanged} currentweatherid = {currentweatherid}/>
 			<br></br>
 			<ForeCastPerDay forecastdetail = {forecastdetail} onFCLinkClicked = {onFCLinkClicked} />
+			<br></br>
+			<LineGraph filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/>
+			<br></br>
 			<br></br>
 			<ForeCastList filterweatherdata = {filterweatherdata}
 			showforecastperday = {showforecastperday} />
