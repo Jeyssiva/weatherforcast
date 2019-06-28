@@ -2,7 +2,7 @@ import React, { useState, useEffect,  Fragment } from 'react'
 import DropDownList from './dropdownlist'
 import ForeCastList from './forecastlist'
 import ForeCastPerDay from './forecastperday'
-import LineGraph from './linechart'
+import Temperature_Chart from './temperature_chart'
 
 const Weather = () => {
 	// Initialize the Cities
@@ -93,11 +93,13 @@ const Weather = () => {
 				}
 			}
 
-			var ampmc = c_hours < 12 ? "AM" : "PM"
-			var hourc = c_hours 
 		    let convfvalue = Math.floor(parseFloat(item.main.temp) * 9/5 - 459.67)
 			let convcvalue = Math.floor(parseFloat(item.main.temp) - 273.15)
-			let chartdetails = {id:c_getDate,x_axis:hourc,y_axis_f:parseInt(convfvalue),y_axis_c:parseInt(convcvalue)}
+			let ampm =  c_hours >= 12 ? 'pm' : 'am';
+			let c_12_hours = c_hours % 12
+			c_12_hours = c_12_hours ? c_12_hours : 12
+			let hour12format = c_12_hours + ampm
+			let chartdetails = {id:c_getDate,x_axis:hour12format,y_axis_f:parseInt(convfvalue),y_axis_c:parseInt(convcvalue)}
 			chart_details.push(chartdetails)
 	})
 
@@ -228,6 +230,7 @@ const Weather = () => {
 		
 		setfilterWeatherData(weather_datas)
 		setForeCastDetail(w_forecastdetail)
+		setForeCastId({id:firstweatherdata.id})
 	}
 
 	return (
@@ -236,13 +239,15 @@ const Weather = () => {
 			<DropDownList cities = {cities} updateCity = {updateCity} 
 				weathertypes = {weathertypes} weatherChanged ={weatherChanged} currentweatherid = {currentweatherid}/>
 			<br></br>
-			<ForeCastPerDay forecastdetail = {forecastdetail} onFCLinkClicked = {onFCLinkClicked} />
-			<br></br>
-			<LineGraph filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/>
-			<br></br>
-			<br></br>
-			<ForeCastList filterweatherdata = {filterweatherdata}
-			showforecastperday = {showforecastperday} />
+			<div id="WeatherReport">
+				<ForeCastPerDay forecastdetail = {forecastdetail} onFCLinkClicked = {onFCLinkClicked} />		
+				{/* <LineGraph filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/> */}
+				{/* <Temperature_Chart filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/> */}
+				<Temperature_Chart filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/> 
+				<ForeCastList filterweatherdata = {filterweatherdata}
+							showforecastperday = {showforecastperday} 
+							selectedforecastid = {forecastid ? forecastid.id : 0}/>
+			</div>
     	</div>
 	)
 }
