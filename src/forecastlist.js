@@ -11,7 +11,8 @@ const ForeCastList = (props) => {
                 fahrenvalue = {item.fahrenvalue}
                 showforecastperday = {props.showforecastperday}
                 celsiusvalue = {item.celsiusvalue}
-                isshowfahren = {item.isshowfahren}></ForeCast>)
+                isshowfahren = {item.isshowfahren}
+                selectedforecastid = {props.selectedforecastid}></ForeCast>)
     })
     return (
         <div id ={"forecastlist"} className = {"divforecastlist"}>

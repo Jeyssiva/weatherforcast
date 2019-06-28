@@ -19,7 +19,11 @@ const ForeCast = (props) => {
     let clswholedigitcvalue = classnames ({'divinline' : !props.isshowfahren},
                             {'displaynone' : props.isshowfahren})
 
-    
+    let clsselecteddivbox = classnames ('divsingleboxeather',
+                                        {'selecteddivsinglebox': props.uniquecode == props.selectedforecastid})
+
+    //"divsingleboxeather selecteddivsinglebox"
+
     const onWeatherClick = event => {
         let idvalue = event.target.id.split('_')[1]
 
@@ -28,7 +32,7 @@ const ForeCast = (props) => {
 	}
 
     return (
-        <div className={"divsingleboxeather"} id = {"div_"+props.uniquecode} onClick = {onWeatherClick}>
+        <div className={clsselecteddivbox} id = {"div_"+props.uniquecode} onClick = {onWeatherClick}>
             <div id = {"ddiv_"+props.uniquecode} >{props.dayofgivendate}
             </div>
             <div id = {"imgdiv_"+ props.uniquecode} className = {"divimg"}>

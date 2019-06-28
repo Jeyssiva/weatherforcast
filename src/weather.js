@@ -241,8 +241,6 @@ const Weather = () => {
 			<br></br>
 			<div id="WeatherReport">
 				<ForeCastPerDay forecastdetail = {forecastdetail} onFCLinkClicked = {onFCLinkClicked} />		
-				{/* <LineGraph filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/> */}
-				{/* <Temperature_Chart filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/> */}
 				<Temperature_Chart filterchartdetails = {filterchartdetails} isdisplayfahrenvalue = {isdisplayfahrenvalue}/> 
 				<ForeCastList filterweatherdata = {filterweatherdata}
 							showforecastperday = {showforecastperday} 
